@@ -25,4 +25,23 @@ class UsuarioModel:
                 conexion.close()
         return False
 
-
+    def login(self, email, password):
+        conexion = self.db.conectar()
+        if conexion:
+            try:
+                cursor = conexion.cursor(dictionary=True)
+                sql = "SELECT * FROM usuarios WHERE email = %s"
+                cursor.execute(sql, (email,))
+                usuario = cursor.fetchone()
+                if usuario:
+                    if check_password_hash(usuario['password_hash'], password):
+                        return usuario
+                return None
+            except Exception as e:
+                print (f'Error en login: {e}')
+                return None
+            finally:
+                if 'cursor' in locals():
+                    cursor.close()
+                conexion.close()
+        return False
