@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from db.database import Database
 from models.usuario import UsuarioModel
+from models.mascota import MascotaModel 
+
 
 app = Flask(__name__)
 app.secret_key = 'pipetapp_secret_key_2026'
 db = Database()
 modelo_usuario = UsuarioModel()
+modelo_mascota = MascotaModel()
 
 @app.route('/')
 def inicio():
@@ -43,7 +46,8 @@ def login():
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' in session:
-        return f"<h1>Hola {session['username']}, bienvenido a tu Dashboard de PipetApp 🐾</h1>"
+        mis_mascotas = modelo_mascota.obtener_por_usuario(session['user_id'])
+        return render_template('dashboard.html', mascotas = mis_mascotas)
     return redirect(url_for('login'))
 
 
