@@ -9,7 +9,7 @@ class MascotaModel:
         if conexion:
             try:
                 cursor = conexion.cursor(dictionary=True)
-                sql = "SELECT id, nombre, especie, raza, peso, ultima_pipeta FROM mascotas WHERE usuario_id = %s"
+                sql = "SELECT id, nombre, raza, peso, ultima_pipeta FROM mascotas WHERE usuario_id = %s"
                 cursor.execute(sql, (usuario_id,))
                 return cursor.fetchall()
             except Exception as e:
@@ -26,13 +26,8 @@ class MascotaModel:
         if conexion:
             try:
                 cursor = conexion.cursor()
-                sql = """
-                    INSERT INTO mascotas 
-                    (usuario_id, nombre, especie, raza, peso, ultima_pipeta) 
-                    VALUES (%s, %s, %s, %s, %s, %s)
-            
-                          """
-                valores = (usuario_id, nombre, especie, raza, peso, ultima_pipeta)
+                sql = "INSERT INTO mascotas(usuario_id, nombre, raza, peso, ultima_pipeta) VALUES (%s, %s, %s, %s, %s)"
+                valores = (usuario_id, nombre, raza, peso, ultima_pipeta)
                 cursor.execute(sql, valores)
                 conexion.commit()
                 return True

@@ -50,7 +50,25 @@ def dashboard():
         return render_template('dashboard.html', mascotas = mis_mascotas)
     return redirect(url_for('login'))
 
+@app.route('/agregar_mascota', methods=['GET', 'POST'])
+def agregar_mascota():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        nombre = request.form.get('nombre')
+        especie = request.form.get('especie')
+        raza = request.form.get('raza')
+        peso = request.form.get('peso')
+        ultima_pipeta = request.form.get('ultima_pipeta')
 
+        usuario_id = session['user_id']  
+
+        if modelo_mascota.registrar(usuario_id, nombre, especie, raza, peso, ultima_pipeta):
+            return redirect(url_for('dashboard')) 
+        else:
+            return "Error al cargar la mascota a la base de datos" 
+        
+    return render_template('agregar_mascota.html')
 
    
 if __name__ == '__main__':
